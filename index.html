@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento HTML Básico</title>
+</head>
+
+<body>
+
+    <!-- Cargar TensorFlowJS y el modelo MobileNet -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+
+    <!-- Elemento de video configurado para mostrar el stream de la cámara trasera -->
+    <video id="video" width="640" height="480" autoplay muted playsinline>
+        Tu navegador no soporta el elemento de video.
+    </video>
+
+    <!-- Contenedor para mostrar los resultados del modelo MobileNet -->
+    <div id="result-container">
+        <!-- Los resultados se mostrarán aquí -->
+    </div>
+
+    <!-- Código JavaScript para mostrar la cámara trasera en el elemento video -->
+    <script>
+        const videoElement = document.getElementById('video');
+
+        // Solicitar acceso a la cámara trasera
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: "environment" } }
+        })
+            .then(stream => {
+                videoElement.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error al acceder a la cámara: ', error);
+            });
+    </script>
+
+    <!-- Código JavaScript para cargar MobileNet y realizar la clasificación en el stream del vídeo -->
+    <script>
+        // Espera a que TensorFlow.js esté listo
+        tf.ready().then(() => {
+            // Cargar el modelo MobileNet
+            mobilenet.load().then(model => {
+                console.log('Modelo MobileNet cargado');
+                // Clasificar de forma periódica cada 1 segundo
+                setInterval(() => {
+                    model.classify(videoElement).then(predictions => {
+                        const resultContainer = document.getElementById('result-container');
+                        resultContainer.innerHTML = predictions.map(p =>
+                            `<div>${p.className}: ${(p.probability * 100).toFixed(2)}%</div>`
+                        ).join('');
+                    }).catch(err => console.error('Error en clasificación: ', err));
+                }, 1000);
+            }).catch(err => console.error('Error al cargar MobileNet: ', err));
+        });
+    </script>
+
+</body>
+
+</html>
