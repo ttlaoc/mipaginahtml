@@ -6,6 +6,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documento HTML Básico</title>
+    <style>
+        /* Estilos para hacer la aplicación responsiva */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+        }
+
+        #result-container {
+            width: 100%;
+            max-width: 640px;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,7 +38,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
 
     <!-- Elemento de video configurado para mostrar el stream de la cámara trasera -->
-    <video id="video" width="640" height="480" autoplay muted playsinline>
+    <video id="video" autoplay muted playsinline>
         Tu navegador no soporta el elemento de video.
     </video>
 
